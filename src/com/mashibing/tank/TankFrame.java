@@ -12,6 +12,9 @@ import java.awt.event.WindowEvent;
  */
 public class TankFrame extends Frame {
 
+    int x = 200;
+    int y = 200;
+
     public TankFrame() {
         setVisible(true);
         setSize(800, 600);
@@ -29,6 +32,8 @@ public class TankFrame extends Frame {
     @Override
     public void paint(Graphics g) {
         g.fillRect(200, 200, 50, 50);
+        x += 10;
+        y += 10;
         System.out.println("paint");
     }
 }
