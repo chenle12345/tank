@@ -37,14 +37,16 @@ public class TankFrame extends Frame {
     public void paint(Graphics g) {
         g.fillRect(x, y, 50, 50);
         x += 10;
-        y += 10;
+//        y += 10;
         System.out.println("paint");
     }
 
     class MyKeyListener extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent e) {
-            System.out.println("key pressed");
+//            System.out.println("key pressed");
+//            x += 200;
+//            repaint();
         }
 
         @Override
