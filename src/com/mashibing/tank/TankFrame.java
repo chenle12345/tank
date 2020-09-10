@@ -15,6 +15,7 @@ import java.awt.event.WindowEvent;
 public class TankFrame extends Frame {
 
     Tank myTank = new Tank(200, 200, Dir.DOWN);
+    Bullet b = new Bullet(300, 300, Dir.DOWN);
 
     public TankFrame() {
         setVisible(true);
@@ -36,9 +37,8 @@ public class TankFrame extends Frame {
     public void paint(Graphics g) {
 
         myTank.paint(g);
+        b.paint(g);
 
-//        x += 10;
-//        y += 10;
         System.out.println("paint");
     }
 
@@ -51,9 +51,6 @@ public class TankFrame extends Frame {
 
         @Override
         public void keyPressed(KeyEvent e) {
-//            System.out.println("key pressed");
-//            x += 200;
-//            repaint();
 
             int key = e.getKeyCode();
             switch (key) {
