@@ -5,6 +5,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Auther: chenle
@@ -15,6 +17,7 @@ import java.awt.event.WindowEvent;
 public class TankFrame extends Frame {
 
     Tank myTank = new Tank(200, 200, Dir.DOWN, this);
+    List<Bullet> bullets = new ArrayList<>(); 
     Bullet b = new Bullet(300, 300, Dir.DOWN);
 
     static final int GAME_WIDTH = 800, GAME_HEIGHT = 600;
@@ -55,7 +58,9 @@ public class TankFrame extends Frame {
     public void paint(Graphics g) {
 
         myTank.paint(g);
-        b.paint(g);
+        for (Bullet b : bullets) {
+            b.paint(g);
+        }
 
         System.out.println("paint");
     }
