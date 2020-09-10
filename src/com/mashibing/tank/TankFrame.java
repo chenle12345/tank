@@ -69,6 +69,19 @@ public class TankFrame extends Frame {
                     bD = true;
                     break;
             }
+
+            if (bL == true) {
+                x -= 20;
+            }
+            if (bU == true) {
+                y -= 20;
+            }
+            if (bR == true) {
+                x += 20;
+            }
+            if (bD == true) {
+                y += 20;
+            }
         }
 
         @Override
