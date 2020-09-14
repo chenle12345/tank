@@ -1,4 +1,4 @@
-package java.com.mashibing.tank;
+package com.mashibing.tank;
 
 /**
  * @Auther: chenle
