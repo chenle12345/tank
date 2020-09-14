@@ -1,6 +1,4 @@
-package com.mashibing.tank;
-
-import com.sun.javafx.print.PrinterJobImpl;
+package java.com.mashibing.tank;
 
 import java.awt.*;
 

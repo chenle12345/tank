@@ -1,4 +1,4 @@
-package com.mashibing.tank;
+package java.com.mashibing.tank;
 
 import java.awt.*;
 import java.awt.event.KeyAdapter;
