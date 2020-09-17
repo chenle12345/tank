@@ -23,6 +23,7 @@ public class Tank {
     private boolean living = true;
     private Group group = Group.BAD;
     private Random random = new Random();
+    Rectangle rect = new Rectangle();
 
     public Group getGroup() {
         return group;
@@ -38,6 +39,11 @@ public class Tank {
         this.dir = dir;
         this.tf = tf;
         this.group = group;
+
+        rect.x = this.x;
+        rect.y = this.y;
+        rect.width = WIDTH;
+        rect.height = HEIGHT;
     }
 
     public int getX() {
@@ -149,6 +155,7 @@ public class Tank {
                 break;
         }
 
+
         if (this.group == Group.BAD && random.nextInt(100) > 95) {
             this.fire();
         }
@@ -157,6 +164,10 @@ public class Tank {
         }
 
         boundsCheck();
+
+        // update rect
+        rect.x = this.x;
+        rect.y = this.y;
     }
 
     private void boundsCheck() {
@@ -181,7 +192,6 @@ public class Tank {
     }
 
     public void fire() {
-
         int bX = this.x + Tank.WIDTH / 2 - Bullet.WIDTH / 2;
         int bY = this.y + Tank.HEIGHT / 2 - Bullet.HEIGHT / 2;
         tf.bullets.add(new Bullet(bX, bY, this.dir, this.group, this.tf));
