@@ -24,6 +24,8 @@ public class Explode {
         this.x = x;
         this.y = y;
         this.tf = tankFrame;
+
+        new Thread(()->new Audio("audio/explode.wav").play()).start();
     }
 
 
