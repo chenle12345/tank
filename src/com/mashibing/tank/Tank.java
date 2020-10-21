@@ -1,5 +1,6 @@
 package com.mashibing.tank;
 
+import javax.swing.text.StyledEditorKit;
 import java.awt.*;
 import java.util.Random;
 
@@ -11,19 +12,21 @@ import java.util.Random;
  */
 public class Tank {
 
-    private int x, y;
-    private Dir dir = Dir.DOWN;
+    int x, y;
+    Dir dir = Dir.DOWN;
     private static final int SPEED = 5;
 
     public static int WIDTH = ResourceMgr.goodTankU.getWidth();
     public static int HEIGHT = ResourceMgr.goodTankU.getHeight();
 
     private boolean moving = true;
-    private TankFrame tf = null;
+    TankFrame tf = null;
     private boolean living = true;
-    private Group group = Group.BAD;
+    Group group = Group.BAD;
     private Random random = new Random();
     Rectangle rect = new Rectangle();
+
+    FireStrategy fireStrategy;
 
     public Group getGroup() {
         return group;
@@ -44,6 +47,22 @@ public class Tank {
         rect.y = this.y;
         rect.width = WIDTH;
         rect.height = HEIGHT;
+
+        if (group == Group.GOOD) {
+
+            String goodFSName = (String) PropertyMgr.get("goodFS");
+            try {
+                fireStrategy = (FireStrategy) Class.forName(goodFSName).newInstance();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else {
+            fireStrategy = new DefaultFireStrategy();
+        }
     }
 
     public int getX() {
@@ -79,7 +98,6 @@ public class Tank {
         if (!living) {
             tf.tanks.remove(this);
         }
-
 
 
         switch (dir) {
@@ -188,13 +206,11 @@ public class Tank {
 
     private void randomDir() {
 
-        this.dir = Dir.values() [random.nextInt(4)];
+        this.dir = Dir.values()[random.nextInt(4)];
     }
 
     public void fire() {
-        int bX = this.x + Tank.WIDTH / 2 - Bullet.WIDTH / 2;
-        int bY = this.y + Tank.HEIGHT / 2 - Bullet.HEIGHT / 2;
-        tf.bullets.add(new Bullet(bX, bY, this.dir, this.group, this.tf));
+        fireStrategy.fire(this);
     }
 
     public void die() {
