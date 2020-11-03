@@ -8,13 +8,12 @@ package com.mashibing.tank;
  */
 public class DefaultFireStrategy implements FireStrategy {
     @Override
-    public void fire(Tank tank) {
-        int bX = tank.x + Tank.WIDTH / 2 - Bullet.WIDTH / 2;
-        int bY = tank.y + Tank.HEIGHT / 2 - Bullet.HEIGHT / 2;
-        new Bullet(bX, bY, tank.dir, tank.group, tank.tf);
+    public void fire(Tank t) {
+        int bX = t.x + Tank.WIDTH/2 - Bullet.WIDTH/2;
+        int bY = t.y + Tank.HEIGHT/2 - Bullet.HEIGHT/2;
 
-        if (tank.group == Group.GOOD) {
-            new Thread(()->new Audio("audio/tank"));
-        }
+        new Bullet(bX, bY, t.dir, t.group, t.gm);
+
+        if(t.group == Group.GOOD) new Thread(()->new Audio("audio/tank_fire.wav").play()).start();
     }
 }

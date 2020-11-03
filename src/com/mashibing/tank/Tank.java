@@ -12,151 +12,85 @@ import java.util.Random;
  */
 public class Tank {
 
-    int x, y;
-    Dir dir = Dir.DOWN;
-    private static final int SPEED = 5;
 
+    private static final int SPEED = 2;
     public static int WIDTH = ResourceMgr.goodTankU.getWidth();
+
     public static int HEIGHT = ResourceMgr.goodTankU.getHeight();
 
-    private boolean moving = true;
-    TankFrame tf = null;
-    private boolean living = true;
-    Group group = Group.BAD;
-    private Random random = new Random();
     Rectangle rect = new Rectangle();
 
-    FireStrategy fireStrategy;
+    private Random random = new Random();
 
-    public Group getGroup() {
-        return group;
-    }
+    int x, y;
 
-    public void setGroup(Group group) {
-        this.group = group;
-    }
+    Dir dir = Dir.DOWN;
 
-    public Tank(int x, int y, Dir dir, Group group, TankFrame tf) {
+    private boolean moving = true;
+
+    private boolean living = true;
+    Group group = Group.BAD;
+
+    FireStrategy fs;
+    GameModel gm;
+
+    public Tank(int x, int y, Dir dir, Group group, GameModel gm) {
+        super();
         this.x = x;
         this.y = y;
         this.dir = dir;
-        this.tf = tf;
         this.group = group;
+        this.gm = gm;
 
         rect.x = this.x;
         rect.y = this.y;
         rect.width = WIDTH;
         rect.height = HEIGHT;
 
-        if (group == Group.GOOD) {
+        if(group == Group.GOOD) {
+            String goodFSName = (String)PropertyMgr.get("goodFS");
 
-            String goodFSName = (String) PropertyMgr.get("goodFS");
             try {
-                fireStrategy = (FireStrategy) Class.forName(goodFSName).newInstance();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
+                fs = (FireStrategy)Class.forName(goodFSName).getDeclaredConstructor().newInstance();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
+
         } else {
-            fireStrategy = new DefaultFireStrategy();
+            fs = new DefaultFireStrategy();
         }
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
+    public void fire() {
+        fs.fire(this);
     }
 
     public Dir getDir() {
         return dir;
     }
 
-    public void setDir(Dir dir) {
-        this.dir = dir;
+    public int getX() {
+        return x;
     }
 
-    public static int getSPEED() {
-        return SPEED;
+
+    public Group getGroup() {
+        return group;
     }
-
-    public void paint(Graphics g) {
-
-        if (!living) {
-            tf.tanks.remove(this);
-        }
-
-
-        switch (dir) {
-            case LEFT:
-                g.drawImage(this.group == Group.GOOD ? ResourceMgr.goodTankL : ResourceMgr.badTankL, x, y, null);
-                break;
-            case UP:
-                g.drawImage(this.group == Group.GOOD ? ResourceMgr.goodTankU : ResourceMgr.badTankU, x, y, null);
-                break;
-            case RIGHT:
-                g.drawImage(this.group == Group.GOOD ? ResourceMgr.goodTankR : ResourceMgr.badTankR, x, y, null);
-                break;
-            case DOWN:
-                g.drawImage(this.group == Group.GOOD ? ResourceMgr.goodTankD : ResourceMgr.badTankD, x, y, null);
-                break;
-        }
-
-
-        move();
-
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+    public int getY() {
+        return y;
     }
 
     public boolean isMoving() {
         return moving;
     }
 
-    public void setMoving(boolean moving) {
-        this.moving = moving;
-    }
-
-    public static int getWIDTH() {
-        return WIDTH;
-    }
-
-    public static void setWIDTH(int WIDTH) {
-        Tank.WIDTH = WIDTH;
-    }
-
-    public static int getHEIGHT() {
-        return HEIGHT;
-    }
-
-    public static void setHEIGHT(int HEIGHT) {
-        Tank.HEIGHT = HEIGHT;
-    }
-
-    public TankFrame getTf() {
-        return tf;
-    }
-
-    public void setTf(TankFrame tf) {
-        this.tf = tf;
-    }
-
     private void move() {
 
-        if (!moving) {
-            return;
-        }
+        if(!moving) return ;
 
         switch (dir) {
             case LEFT:
@@ -173,35 +107,24 @@ public class Tank {
                 break;
         }
 
-
-        if (this.group == Group.BAD && random.nextInt(100) > 95) {
+        if(this.group == Group.BAD && random.nextInt(100) > 95)
             this.fire();
-        }
-        if (this.group == Group.BAD && random.nextInt(100) > 95) {
+
+        if(this.group == Group.BAD && random.nextInt(100) > 95)
             randomDir();
-        }
 
         boundsCheck();
-
-        // update rect
+        //update rect
         rect.x = this.x;
         rect.y = this.y;
+
     }
 
     private void boundsCheck() {
-        if (this.x < 0) {
-            x = 2;
-        }
-        if (this.y < 20) {
-            y = 28;
-        }
-        if (this.x > TankFrame.GAME_WIDTH - Tank.WIDTH) {
-            x = TankFrame.GAME_WIDTH - Tank.WIDTH - 2;
-        }
-        if (this.y > TankFrame.GAME_HEIGHT - Tank.HEIGHT) {
-            y = TankFrame.GAME_HEIGHT - Tank.HEIGHT - 2;
-        }
-
+        if (this.x < 2) x = 2;
+        if (this.y < 28) y = 28;
+        if (this.x > TankFrame.GAME_WIDTH- Tank.WIDTH -2) x = TankFrame.GAME_WIDTH - Tank.WIDTH -2;
+        if (this.y > TankFrame.GAME_HEIGHT - Tank.HEIGHT -2 ) y = TankFrame.GAME_HEIGHT -Tank.HEIGHT -2;
     }
 
     private void randomDir() {
@@ -209,11 +132,50 @@ public class Tank {
         this.dir = Dir.values()[random.nextInt(4)];
     }
 
-    public void fire() {
-        fireStrategy.fire(this);
+    public void paint(Graphics g) {
+        if(!living) gm.tanks.remove(this);
+
+
+
+        switch(dir) {
+            case LEFT:
+                g.drawImage(this.group == Group.GOOD? ResourceMgr.goodTankL : ResourceMgr.badTankL, x, y, null);
+                break;
+            case UP:
+                g.drawImage(this.group == Group.GOOD? ResourceMgr.goodTankU : ResourceMgr.badTankU, x, y, null);
+                break;
+            case RIGHT:
+                g.drawImage(this.group == Group.GOOD? ResourceMgr.goodTankR : ResourceMgr.badTankR, x, y, null);
+                break;
+            case DOWN:
+                g.drawImage(this.group == Group.GOOD? ResourceMgr.goodTankD : ResourceMgr.badTankD, x, y, null);
+                break;
+        }
+
+        move();
+
     }
 
+
+    public void setDir(Dir dir) {
+        this.dir = dir;
+    }
+
+    public void setMoving(boolean moving) {
+        this.moving = moving;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
     public void die() {
         this.living = false;
     }
+
+
+
 }

@@ -10,17 +10,34 @@ import java.awt.*;
  */
 public class Bullet {
 
-    private static final int SPEED = 10;
+    private static final int SPEED = 6;
     public static int WIDTH = ResourceMgr.bulletD.getWidth();
     public static int HEIGHT = ResourceMgr.bulletD.getHeight();
+
     Rectangle rect = new Rectangle();
 
     private int x, y;
     private Dir dir;
 
     private boolean living = true;
-    private TankFrame tf = null;
+    GameModel gm = null;
     private Group group = Group.BAD;
+
+    public Bullet(int x, int y, Dir dir, Group group, GameModel gm) {
+        this.x = x;
+        this.y = y;
+        this.dir = dir;
+        this.group = group;
+        this.gm = gm;
+
+        rect.x = this.x;
+        rect.y = this.y;
+        rect.width = WIDTH;
+        rect.height = HEIGHT;
+
+        gm.bullets.add(this);
+
+    }
 
     public Group getGroup() {
         return group;
@@ -30,26 +47,9 @@ public class Bullet {
         this.group = group;
     }
 
-    public Bullet(int x, int y, Dir dir, Group group, TankFrame tankFrame) {
-        this.x = x;
-        this.y = y;
-        this.dir = dir;
-        this.tf = tankFrame;
-        this.group = group;
-
-        rect.x = this.x;
-        rect.y = this.y;
-        rect.width = WIDTH;
-        rect.height = HEIGHT;
-
-        tf.bullets.add(this);
-    }
-
-
     public void paint(Graphics g) {
-
         if (!living) {
-            tf.bullets.remove(this);
+            gm.bullets.remove(this);
         }
 
         switch (dir) {
@@ -68,7 +68,6 @@ public class Bullet {
         }
 
         move();
-
     }
 
     private void move() {
@@ -88,27 +87,23 @@ public class Bullet {
                 break;
         }
 
-        // update rect
+        //update rect
         rect.x = this.x;
         rect.y = this.y;
 
-
-        if (x < 0 || y < 0 || x > TankFrame.GAME_WIDTH || y > TankFrame.GAME_HEIGHT) {
-            living = false;
-        }
+        if (x < 0 || y < 0 || x > TankFrame.GAME_WIDTH || y > TankFrame.GAME_HEIGHT) living = false;
 
     }
 
     public void collideWith(Tank tank) {
-        if (this.group == tank.getGroup()) {
-            return;
-        }
+        if (this.group == tank.getGroup()) return;
+
         if (rect.intersects(tank.rect)) {
             tank.die();
             this.die();
             int eX = tank.getX() + Tank.WIDTH / 2 - Explode.WIDTH / 2;
             int eY = tank.getY() + Tank.HEIGHT / 2 - Explode.HEIGHT / 2;
-            tf.explodes.add(new Explode(eX, eY, tf));
+            gm.explodes.add(new Explode(eX, eY, gm));
         }
 
     }
