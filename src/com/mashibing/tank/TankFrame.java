@@ -5,8 +5,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @Auther: chenle
@@ -17,7 +15,6 @@ import java.util.List;
 public class TankFrame extends Frame {
 
     GameModel gm = new GameModel();
-
 
 
     static final int GAME_WIDTH = 1080, GAME_HEIGHT = 960;
@@ -61,7 +58,6 @@ public class TankFrame extends Frame {
         gm.paint(g);
 
 
-
     }
 
     class MyKeyListener extends KeyAdapter {
@@ -94,7 +90,7 @@ public class TankFrame extends Frame {
 
             setMainTankDir();
 
-            new Thread(()->new Audio("audio/tank_move.wav").play()).start();
+            new Thread(() -> new Audio("audio/tank_move.wav").play()).start();
         }
 
         @Override

@@ -35,7 +35,7 @@ public class Explode extends GameObject {
         g.drawImage(ResourceMgr.explodes[step++], x, y, null);
 
         if(step >= ResourceMgr.explodes.length)
-            gm.explodes.remove(this);
+            gm.remove(this);
 
 
     }

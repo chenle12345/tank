@@ -1,6 +1,5 @@
 package com.mashibing.tank;
 
-import javax.swing.text.StyledEditorKit;
 import java.awt.*;
 import java.util.Random;
 
@@ -10,7 +9,7 @@ import java.util.Random;
  * @Description: com.mashibing.tank
  * @version: 1.0
  */
-public class Tank {
+public class Tank extends GameObject {
 
 
     private static final int SPEED = 2;
@@ -47,11 +46,11 @@ public class Tank {
         rect.width = WIDTH;
         rect.height = HEIGHT;
 
-        if(group == Group.GOOD) {
-            String goodFSName = (String)PropertyMgr.get("goodFS");
+        if (group == Group.GOOD) {
+            String goodFSName = (String) PropertyMgr.get("goodFS");
 
             try {
-                fs = (FireStrategy)Class.forName(goodFSName).getDeclaredConstructor().newInstance();
+                fs = (FireStrategy) Class.forName(goodFSName).getDeclaredConstructor().newInstance();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -77,9 +76,11 @@ public class Tank {
     public Group getGroup() {
         return group;
     }
+
     public void setGroup(Group group) {
         this.group = group;
     }
+
     public int getY() {
         return y;
     }
@@ -90,7 +91,7 @@ public class Tank {
 
     private void move() {
 
-        if(!moving) return ;
+        if (!moving) return;
 
         switch (dir) {
             case LEFT:
@@ -107,10 +108,10 @@ public class Tank {
                 break;
         }
 
-        if(this.group == Group.BAD && random.nextInt(100) > 95)
+        if (this.group == Group.BAD && random.nextInt(100) > 95)
             this.fire();
 
-        if(this.group == Group.BAD && random.nextInt(100) > 95)
+        if (this.group == Group.BAD && random.nextInt(100) > 95)
             randomDir();
 
         boundsCheck();
@@ -120,11 +121,15 @@ public class Tank {
 
     }
 
+    public Rectangle getRect() {
+        return rect;
+    }
+
     private void boundsCheck() {
         if (this.x < 2) x = 2;
         if (this.y < 28) y = 28;
-        if (this.x > TankFrame.GAME_WIDTH- Tank.WIDTH -2) x = TankFrame.GAME_WIDTH - Tank.WIDTH -2;
-        if (this.y > TankFrame.GAME_HEIGHT - Tank.HEIGHT -2 ) y = TankFrame.GAME_HEIGHT -Tank.HEIGHT -2;
+        if (this.x > TankFrame.GAME_WIDTH - Tank.WIDTH - 2) x = TankFrame.GAME_WIDTH - Tank.WIDTH - 2;
+        if (this.y > TankFrame.GAME_HEIGHT - Tank.HEIGHT - 2) y = TankFrame.GAME_HEIGHT - Tank.HEIGHT - 2;
     }
 
     private void randomDir() {
@@ -133,22 +138,21 @@ public class Tank {
     }
 
     public void paint(Graphics g) {
-        if(!living) gm.tanks.remove(this);
+        if (!living) gm.remove(this);
 
 
-
-        switch(dir) {
+        switch (dir) {
             case LEFT:
-                g.drawImage(this.group == Group.GOOD? ResourceMgr.goodTankL : ResourceMgr.badTankL, x, y, null);
+                g.drawImage(this.group == Group.GOOD ? ResourceMgr.goodTankL : ResourceMgr.badTankL, x, y, null);
                 break;
             case UP:
-                g.drawImage(this.group == Group.GOOD? ResourceMgr.goodTankU : ResourceMgr.badTankU, x, y, null);
+                g.drawImage(this.group == Group.GOOD ? ResourceMgr.goodTankU : ResourceMgr.badTankU, x, y, null);
                 break;
             case RIGHT:
-                g.drawImage(this.group == Group.GOOD? ResourceMgr.goodTankR : ResourceMgr.badTankR, x, y, null);
+                g.drawImage(this.group == Group.GOOD ? ResourceMgr.goodTankR : ResourceMgr.badTankR, x, y, null);
                 break;
             case DOWN:
-                g.drawImage(this.group == Group.GOOD? ResourceMgr.goodTankD : ResourceMgr.badTankD, x, y, null);
+                g.drawImage(this.group == Group.GOOD ? ResourceMgr.goodTankD : ResourceMgr.badTankD, x, y, null);
                 break;
         }
 
@@ -172,10 +176,13 @@ public class Tank {
     public void setY(int y) {
         this.y = y;
     }
+
     public void die() {
         this.living = false;
     }
 
-
+    public void stop() {
+        moving = false;
+    }
 
 }
